@@ -1,3 +1,4 @@
+do ->
 
 	scriptovich =
 
@@ -19,7 +20,8 @@
 				when 'на' then 'femail'
 				else 'androgynous'
 
-
+	if module?.exports? then module.exports = scriptovich
+	else if window? then window.scriptovich = scriptovich
 
 
 	cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
@@ -64,3 +66,4 @@
 				when '-' then name = name[0 ... name.length-1]
 				else name += char
 		name
+
