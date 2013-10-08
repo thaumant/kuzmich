@@ -17,7 +17,7 @@ do ->
 			middlename = middlename.toLowerCase()
 			switch middlename[middlename.length-2...middlename.length]
 				when 'ич' then 'male'
-				when 'на' then 'femail'
+				when 'на' then 'female'
 				else 'androgynous'
 
 	if module?.exports? then module.exports = scriptovich

@@ -20,7 +20,7 @@
           case 'ич':
             return 'male';
           case 'на':
-            return 'femail';
+            return 'female';
           default:
             return 'androgynous';
         }
