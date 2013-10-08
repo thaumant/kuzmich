@@ -1,0 +1,21 @@
+{
+  "name": "scriptovich",
+  "version": "0.0.0",
+  "description": "Порт Petrovich на JS. Склонение падежей русских имён, фамилий и отчеств.",
+  "author": "Ilia Schelokov <thaumant@gmail.com>",
+  "license": "MIT",
+  "bugs": { "url": "https://github.com/thaumant/scriptovich/issues" },
+  "repository": { "type": "git", "url": "https://github.com/thaumant/scriptovich.git" },
+  "keywords": [ "declension", "russian", "language", "names" ],
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "main": "dist/scriptovich.js",
+  "scripts": {
+    "test": "jasmine-node --coffee spec/"
+  },
+  "files": [
+    "LICENSE",
+    "dist/scriptovich.js"
+  ]
+}
