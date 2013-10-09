@@ -1,30 +1,28 @@
 do ->
 
-	scriptovich =
+	kuzmich = {}
+	genders = ['male', 'female', 'androgynous']
+	nametypes = ['first', 'last', 'middle']
+	cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
 
-		lastname: (name, gender, gcase) ->
-			inflect(gender, name, gcase, 'lastname')
+	for gender in genders
+		kuzmich[gender] = {} if not kuzmich.gender?
+		for nametype in nametypes
+			kuzmich[gender][nametype] = do (gender, nametype) ->
+				return (name, gcase) -> inflect gender, name, gcase, "#{nametype}name"
 
-		firstname: (name, gender, gcase) ->
-			inflect(gender, name, gcase, 'firstname')
+	if module?.exports? then module.exports = kuzmich
+	else if window? then window.kuzmich = kuzmich
 
-		middlename: (name, gender, gcase) ->
-			inflect(gender, name, gcase, 'middlename')
-
-		patronymic: @middlename
-
-		detect_gender: (middlename) ->
+	kuzmich.detect_gender = (middlename) ->
 			middlename = middlename.toLowerCase()
 			switch middlename[middlename.length-2...middlename.length]
 				when 'ич' then 'male'
 				when 'на' then 'female'
 				else 'androgynous'
 
-	if module?.exports? then module.exports = scriptovich
-	else if window? then window.scriptovich = scriptovich
+				
 
-
-	cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
 	# rules --> nametype_rulesets --> ruleset (exceptions and suffixes) --> rule --> modificator (mod)
 
 	inflect = (gender, name, gcase, nametype) ->

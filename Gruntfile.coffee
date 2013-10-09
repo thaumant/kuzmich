@@ -6,16 +6,16 @@ module.exports = (grunt) ->
 		coffee:
 			comple:
 				files:
-					'dist/scriptovich-browser.js': 'dist/scriptovich-browser.coffee'
-					'dist/scriptovich-node.js': 'dist/scriptovich-node.coffee'
+					'dist/kuzmich-browser.js': 'dist/kuzmich-browser.coffee'
+					'dist/kuzmich-node.js': 'dist/kuzmich-node.coffee'
 
 		uglify:
 			options:
 				compress: true
 			minify:
 				files:
-					'dist/scriptovich-browser.min.js': 'dist/scriptovich-browser.js'
-					'dist/scriptovich-node.min.js': 'dist/scriptovich-node.js'
+					'dist/kuzmich-browser.min.js': 'dist/kuzmich-browser.js'
+					'dist/kuzmich-node.min.js': 'dist/kuzmich-node.js'
 	)
 
 	grunt.loadNpmTasks 'grunt-contrib-concat'
@@ -29,16 +29,16 @@ module.exports = (grunt) ->
 	grunt.registerTask 'concat:browser', 'Builds browser footer from rules.json', ->
 		grunt.task.requires 'translate-rules'
 		rules = grunt.file.read('dist/rules.json')
-		contents = grunt.file.read('scriptovich.coffee') + '\n\trules = ' + rules + '\n\t'
-		grunt.file.write 'dist/scriptovich-browser.coffee', contents
+		contents = grunt.file.read('kuzmich.coffee') + '\n\trules = ' + rules + '\n\t'
+		grunt.file.write 'dist/kuzmich-browser.coffee', contents
 
 	grunt.registerTask 'concat:node', 'Builds node footer', ->
-		contents = grunt.file.read('scriptovich.coffee') + '\n\trules = require("./rules.json")\n\t'
-		grunt.file.write 'dist/scriptovich-node.coffee', contents
+		contents = grunt.file.read('kuzmich.coffee') + '\n\trules = require("./rules.json")\n\t'
+		grunt.file.write 'dist/kuzmich-node.coffee', contents
 
 	grunt.registerTask 'clear', 'Clears concatenated coffee files after built', ->
-		grunt.file.delete('dist/scriptovich-browser.coffee')
-		grunt.file.delete('dist/scriptovich-node.coffee')
+		grunt.file.delete('dist/kuzmich-browser.coffee')
+		grunt.file.delete('dist/kuzmich-node.coffee')
 
 
 	grunt.registerTask 'concat', ['translate-rules', 'concat:browser', 'concat:node']

@@ -2,36 +2,41 @@
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function() {
-    var apply_rule, cases, find_rule_global, find_rule_local, inflect, rules, scriptovich;
-    scriptovich = {
-      lastname: function(name, gender, gcase) {
-        return inflect(gender, name, gcase, 'lastname');
-      },
-      firstname: function(name, gender, gcase) {
-        return inflect(gender, name, gcase, 'firstname');
-      },
-      middlename: function(name, gender, gcase) {
-        return inflect(gender, name, gcase, 'middlename');
-      },
-      patronymic: this.middlename,
-      detect_gender: function(middlename) {
-        middlename = middlename.toLowerCase();
-        switch (middlename.slice(middlename.length - 2, middlename.length)) {
-          case 'ич':
-            return 'male';
-          case 'на':
-            return 'female';
-          default:
-            return 'androgynous';
-        }
+    var apply_rule, cases, find_rule_global, find_rule_local, gender, genders, inflect, kuzmich, nametype, nametypes, rules, _i, _j, _len, _len1;
+    kuzmich = {};
+    genders = ['male', 'female', 'androgynous'];
+    nametypes = ['first', 'last', 'middle'];
+    cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional'];
+    for (_i = 0, _len = genders.length; _i < _len; _i++) {
+      gender = genders[_i];
+      if (!(kuzmich.gender != null)) {
+        kuzmich[gender] = {};
+      }
+      for (_j = 0, _len1 = nametypes.length; _j < _len1; _j++) {
+        nametype = nametypes[_j];
+        kuzmich[gender][nametype] = (function(gender, nametype) {
+          return function(name, gcase) {
+            return inflect(gender, name, gcase, "" + nametype + "name");
+          };
+        })(gender, nametype);
+      }
+    }
+    if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
+      module.exports = kuzmich;
+    } else if (typeof window !== "undefined" && window !== null) {
+      window.kuzmich = kuzmich;
+    }
+    kuzmich.detect_gender = function(middlename) {
+      middlename = middlename.toLowerCase();
+      switch (middlename.slice(middlename.length - 2, middlename.length)) {
+        case 'ич':
+          return 'male';
+        case 'на':
+          return 'female';
+        default:
+          return 'androgynous';
       }
     };
-    if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
-      module.exports = scriptovich;
-    } else if (typeof window !== "undefined" && window !== null) {
-      window.scriptovich = scriptovich;
-    }
-    cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional'];
     inflect = function(gender, name, gcase, nametype) {
       var i, nametype_rulesets, parts;
       nametype_rulesets = rules[nametype];
@@ -76,15 +81,15 @@
       return find_rule_local(gender, name, nametype_rulesets.suffixes, false, tags);
     };
     find_rule_local = function(gender, name, ruleset, match_whole_word, tags) {
-      var rule, sample, tag, test, _i, _j, _len, _len1, _ref;
-      for (_i = 0, _len = ruleset.length; _i < _len; _i++) {
-        rule = ruleset[_i];
+      var rule, sample, tag, test, _k, _l, _len2, _len3, _ref;
+      for (_k = 0, _len2 = ruleset.length; _k < _len2; _k++) {
+        rule = ruleset[_k];
         if (rule.tags && ((function() {
-          var _j, _len1, _ref, _results;
+          var _l, _len3, _ref, _results;
           _ref = rule.tags;
           _results = [];
-          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-            tag = _ref[_j];
+          for (_l = 0, _len3 = _ref.length; _l < _len3; _l++) {
+            tag = _ref[_l];
             if (__indexOf.call(tags, tag) < 0) {
               _results.push(tag);
             }
@@ -98,8 +103,8 @@
         }
         name = name.toLowerCase();
         _ref = rule.test;
-        for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-          sample = _ref[_j];
+        for (_l = 0, _len3 = _ref.length; _l < _len3; _l++) {
+          sample = _ref[_l];
           test = match_whole_word ? name : name.slice(name.length - sample.length);
           if (test === sample) {
             return rule;
@@ -108,7 +113,7 @@
       }
     };
     apply_rule = function(name, gcase, rule) {
-      var char, mod, _i, _len;
+      var char, mod, _k, _len2;
       if (gcase === 'nominative') {
         mod = '.';
       } else if (__indexOf.call(cases, gcase) >= 0) {
@@ -116,8 +121,8 @@
       } else {
         throw new Error("Unknown grammatic case: " + gcase);
       }
-      for (_i = 0, _len = mod.length; _i < _len; _i++) {
-        char = mod[_i];
+      for (_k = 0, _len2 = mod.length; _k < _len2; _k++) {
+        char = mod[_k];
         switch (char) {
           case '.':
             break;
