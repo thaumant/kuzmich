@@ -1,15 +1,22 @@
 do ->
 
-	kuzmich = {}
 	genders = ['male', 'female', 'androgynous']
 	nametypes = ['first', 'last', 'middle']
 	cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
 
+	kuzmich = (name, params) ->
+		if params.gender not in genders then throw new Error('Valid gender is required as parameter')
+		if params.case not in cases then throw new Error('Valid case is required as parameter')
+		if params.nametype not in nametypes then throw new Error('Valid nametype is required as parameter')
+		inflect(params.gender, name, params.case, "#{params.nametype}name")
+
 	for gender in genders
-		kuzmich[gender] = {} if not kuzmich.gender?
+		kuzmich[gender] = {} if not kuzmich[gender]?
 		for nametype in nametypes
-			kuzmich[gender][nametype] = do (gender, nametype) ->
-				return (name, gcase) -> inflect gender, name, gcase, "#{nametype}name"
+			kuzmich[gender][nametype] = {} if not kuzmich[gender][nametype]?
+			for gcase in cases
+				kuzmich[gender][nametype][gcase] = do (gender, nametype, gcase) ->
+					(name) -> inflect(gender, name, gcase, "#{nametype}name")
 
 	if module?.exports? then module.exports = kuzmich
 	else if window? then window.kuzmich = kuzmich
@@ -20,6 +27,7 @@ do ->
 				when 'ич' then 'male'
 				when 'на' then 'female'
 				else 'androgynous'
+
 
 				
 
