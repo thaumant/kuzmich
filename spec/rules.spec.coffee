@@ -3,7 +3,7 @@ kuzmich = require '../dist/kuzmich-node.js'
 describe 'Склонение простых фамилий', ->
 
 	it 'женские', ->
-		fngrp = kuzmich.female.last
+		fngrp = kuzmich.female.first
 		expect(fngrp.genitive		'Маша').toBe 'Маши'
 		expect(fngrp.dative			'Маша').toBe 'Маше'
 		expect(fngrp.accusative		'Маша').toBe 'Машу'
