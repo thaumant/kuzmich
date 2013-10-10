@@ -1,6 +1,6 @@
 {
   "name": "kuzmich",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Порт Petrovich на JS. Склонение падежей русских имён, фамилий и отчеств.",
   "author": "Ilia Schelokov <thaumant@gmail.com>",
   "license": "MIT",
