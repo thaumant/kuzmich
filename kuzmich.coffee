@@ -1,22 +1,23 @@
 do ->
 
-	genders = ['male', 'female', 'androgynous']
-	nametypes = ['first', 'last', 'middle']
-	cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
+	predef =
+		genders:	['male', 'female', 'androgynous']
+		nametypes:	['first', 'last', 'middle']
+		cases:		['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
 
 	kuzmich = (name, params) ->
-		if params.gender not in genders then throw new Error('Valid gender is required as parameter')
-		if params.case not in cases then throw new Error('Valid case is required as parameter')
-		if params.nametype not in nametypes then throw new Error('Valid nametype is required as parameter')
-		inflect(params.gender, name, params.case, "#{params.nametype}name")
+		for parname in Object.keys predef
+			if params[parname] not in predef[parname]
+				throw new Error "Valid #{gender} is required as parameter"
+		inflect params.gender, name, params.case, "#{params.nametype}name"
 
-	for gender in genders
+	for gender in predef.genders
 		kuzmich[gender] = {} if not kuzmich[gender]?
-		for nametype in nametypes
+		for nametype in predef.nametypes
 			kuzmich[gender][nametype] = {} if not kuzmich[gender][nametype]?
-			for gcase in cases
+			for gcase in predef.cases
 				kuzmich[gender][nametype][gcase] = do (gender, nametype, gcase) ->
-					(name) -> inflect(gender, name, gcase, "#{nametype}name")
+					(name) -> inflect gender, name, gcase, "#{nametype}name"
 
 	if module?.exports? then module.exports = kuzmich
 	else if window? then window.kuzmich = kuzmich
@@ -36,7 +37,7 @@ do ->
 	inflect = (gender, name, gcase, nametype) ->
 		nametype_rulesets = rules[nametype]
 		i = 0
-		parts = name.split('-')
+		parts = name.split '-'
 		parts = parts.map (part) ->
 			first_word = ++i == 1 and parts.size > 1
 			rule = find_rule_global gender, name, nametype_rulesets, first_word: first_word
@@ -64,7 +65,7 @@ do ->
 
 	apply_rule = (name, gcase, rule) ->
 		if		gcase == 'nominative'	then mod = '.'
-		else if gcase in cases			then mod = rule.mods[cases.indexOf(gcase) - 1]
+		else if gcase in predef.cases	then mod = rule.mods[predef.cases.indexOf(gcase) - 1]
 		else	throw new Error("Unknown grammatic case: #{gcase}");
 		for char in mod
 			switch char

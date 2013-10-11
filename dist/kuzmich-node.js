@@ -2,35 +2,38 @@
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   (function() {
-    var apply_rule, cases, find_rule_global, find_rule_local, gcase, gender, genders, inflect, kuzmich, nametype, nametypes, rules, _i, _j, _k, _len, _len1, _len2;
-    genders = ['male', 'female', 'androgynous'];
-    nametypes = ['first', 'last', 'middle'];
-    cases = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional'];
+    var apply_rule, find_rule_global, find_rule_local, gcase, gender, inflect, kuzmich, nametype, predef, rules, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+    predef = {
+      genders: ['male', 'female', 'androgynous'],
+      nametypes: ['first', 'last', 'middle'],
+      cases: ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'prepositional']
+    };
     kuzmich = function(name, params) {
-      var _ref, _ref1, _ref2;
-      if (_ref = params.gender, __indexOf.call(genders, _ref) < 0) {
-        throw new Error('Valid gender is required as parameter');
-      }
-      if (_ref1 = params["case"], __indexOf.call(cases, _ref1) < 0) {
-        throw new Error('Valid case is required as parameter');
-      }
-      if (_ref2 = params.nametype, __indexOf.call(nametypes, _ref2) < 0) {
-        throw new Error('Valid nametype is required as parameter');
+      var parname, _i, _len, _ref, _ref1;
+      _ref = Object.keys(predef);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        parname = _ref[_i];
+        if (_ref1 = params[parname], __indexOf.call(predef[parname], _ref1) < 0) {
+          throw new Error("Valid " + gender + " is required as parameter");
+        }
       }
       return inflect(params.gender, name, params["case"], "" + params.nametype + "name");
     };
-    for (_i = 0, _len = genders.length; _i < _len; _i++) {
-      gender = genders[_i];
+    _ref = predef.genders;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      gender = _ref[_i];
       if (!(kuzmich[gender] != null)) {
         kuzmich[gender] = {};
       }
-      for (_j = 0, _len1 = nametypes.length; _j < _len1; _j++) {
-        nametype = nametypes[_j];
+      _ref1 = predef.nametypes;
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        nametype = _ref1[_j];
         if (!(kuzmich[gender][nametype] != null)) {
           kuzmich[gender][nametype] = {};
         }
-        for (_k = 0, _len2 = cases.length; _k < _len2; _k++) {
-          gcase = cases[_k];
+        _ref2 = predef.cases;
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          gcase = _ref2[_k];
           kuzmich[gender][nametype][gcase] = (function(gender, nametype, gcase) {
             return function(name) {
               return inflect(gender, name, gcase, "" + nametype + "name");
@@ -99,15 +102,15 @@
       return find_rule_local(gender, name, nametype_rulesets.suffixes, false, tags);
     };
     find_rule_local = function(gender, name, ruleset, match_whole_word, tags) {
-      var rule, sample, tag, test, _l, _len3, _len4, _m, _ref;
+      var rule, sample, tag, test, _l, _len3, _len4, _m, _ref3;
       for (_l = 0, _len3 = ruleset.length; _l < _len3; _l++) {
         rule = ruleset[_l];
         if (rule.tags && ((function() {
-          var _len4, _m, _ref, _results;
-          _ref = rule.tags;
+          var _len4, _m, _ref3, _results;
+          _ref3 = rule.tags;
           _results = [];
-          for (_m = 0, _len4 = _ref.length; _m < _len4; _m++) {
-            tag = _ref[_m];
+          for (_m = 0, _len4 = _ref3.length; _m < _len4; _m++) {
+            tag = _ref3[_m];
             if (__indexOf.call(tags, tag) < 0) {
               _results.push(tag);
             }
@@ -120,9 +123,9 @@
           continue;
         }
         name = name.toLowerCase();
-        _ref = rule.test;
-        for (_m = 0, _len4 = _ref.length; _m < _len4; _m++) {
-          sample = _ref[_m];
+        _ref3 = rule.test;
+        for (_m = 0, _len4 = _ref3.length; _m < _len4; _m++) {
+          sample = _ref3[_m];
           test = match_whole_word ? name : name.slice(name.length - sample.length);
           if (test === sample) {
             return rule;
@@ -134,8 +137,8 @@
       var char, mod, _l, _len3;
       if (gcase === 'nominative') {
         mod = '.';
-      } else if (__indexOf.call(cases, gcase) >= 0) {
-        mod = rule.mods[cases.indexOf(gcase) - 1];
+      } else if (__indexOf.call(predef.cases, gcase) >= 0) {
+        mod = rule.mods[predef.cases.indexOf(gcase) - 1];
       } else {
         throw new Error("Unknown grammatic case: " + gcase);
       }
