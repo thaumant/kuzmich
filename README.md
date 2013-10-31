@@ -69,7 +69,7 @@ kuzmich('Маша', parameters); // вернет 'Маше'
 ###Второй вариант использования:
 ```JavaScript
 // Кузьмич обладает цепочкой методов kuzmich[gender][nametype][case]:
-kuzmich.male.first.genetive('Андрей') // вернет "Андрея"
+kuzmich.male.first.genitive('Андрей') // вернет "Андрея"
 kuzmich.female.last.accusative('Иванова') // вернет "Иванову"
 ```
 
